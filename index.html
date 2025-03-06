@@ -6,23 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+ 
+    </style>
+</head>
+
+<body>
+    <div class="count-anim"></div>
+</body>
+<script>
+    let styleTag = document.createElement('style'); 
+    styleTag.textContent = `
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
         @keyframes anim-up-fadeout {
             0% {
-                transform: translateY(0%);
+                transform: translateY(0%) scale(1);
             }
 
             100% {
-                filter: blur(8px);
-                transform: translateY(-4%);
+                filter: blur(3px);
+                transform: translateY(-4%) scale(0.7);
                 opacity: 0;
             }
         }
 
         @keyframes anim-up-fadein {
             0% {
-                filter: blur(8px);
+                filter: blur(3px);
                 transform: translateY(20%);
                 opacity: 0;
             }
@@ -41,15 +51,15 @@
             }
 
             100% {
-                filter: blur(8px);
-                transform: translateY(4%);
+                filter: blur(3px);
+                transform: translateY(4%) scale(0.7);
                 opacity: 0;
             }
         }
 
         @keyframes anim-down-fadein {
             0% {
-                filter: blur(8px);
+                filter: blur(3px);
                 transform: translateY(-20%);
                 opacity: 0;
             }
@@ -61,64 +71,57 @@
             }
         }
 
-        .count-anim {
-            font-family: "Inter";
-            font-size: 152px;
-            font-feature-settings: "tnum";
-            text-align: end;
-        }
-
         .count-anim div {
             display: inline-block;
         }
 
         .count-anim {
+            font-size:52px;
             position: relative;
+            display: flex;
+            justify-content: end;
         }
 
         .count-anim p {
             position: absolute;
             top: 0;
+            display: flex;
+            justify-content: end;
         }
 
         .count-anim-up-fadeout div{
-            animation: anim-up-fadeout cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.4s forwards;
+            animation: anim-up-fadeout cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.45s forwards;
         }
 
         .count-anim-up-fadein div{
             opacity: 0;
-            animation: anim-up-fadein cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s forwards;
+            animation: anim-up-fadein cubic-bezier(0.175, 0.885, 0.32, 1.25) 0.45s forwards;
         }
 
         .count-anim-down-fadeout div{
-            animation: anim-down-fadeout cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.4s forwards;
+            animation: anim-down-fadeout cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.45s forwards;
         }
 
         .count-anim-down-fadein div{
             opacity: 0;
-            animation: anim-down-fadein cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s forwards;
+            animation: anim-down-fadein cubic-bezier(0.175, 0.885, 0.32, 1.25) 0.45s forwards;
         }
 
         div.stop {
             animation: none !important;
             opacity: 1;
-        }
-    </style>
-</head>
+        }`;
+    document.head.appendChild(styleTag);
 
-<body>
-    <div class="count-anim">
-        <p class="count-anim-up-fadeout"></p>
-        <p class="count-anim-up-fadein"></p>
-        <p class="count-anim-down-fadeout"></p>
-        <p class="count-anim-down-fadein"></p>
-    </div>
-</body>
-<script>
     class CountAnim {
         constructor(element) {
             this.element = element
             this.prev_array = []
+            this.element.insertAdjacentHTML("afterbegin",
+            `<p class="count-anim-up-fadeout"></p>
+            <p class="count-anim-up-fadein"></p>
+            <p class="count-anim-down-fadeout"></p>
+            <p class="count-anim-down-fadein"></p>`)
         }
         refresh() {
             this.element.querySelector(".count-anim-up-fadeout").innerHTML = ""
@@ -132,7 +135,6 @@
             let prev_array_reverse = this.prev_array.reverse()
             
             this.refresh()
-
             this.prev_array.forEach((v,i)=>{
                 if(number_array_reverse[i] === v){
                     this.element.querySelector(".count-anim-up-fadeout").insertAdjacentHTML("afterbegin",`<div class="stop">${v}</div>`)
@@ -155,7 +157,6 @@
             let prev_array_reverse = this.prev_array.reverse()
 
             this.refresh()
-
             this.prev_array.forEach((v,i)=>{
                 if(number_array_reverse[i] === v){
                     this.element.querySelector(".count-anim-down-fadeout").insertAdjacentHTML("afterbegin",`<div class="stop">${v}</div>`)
@@ -173,14 +174,23 @@
             })
             this.prev_array = number_array.reverse()
     }
+    change(number){
+        if(Number(this.prev_array.join(""))<number){
+            this.up(number)
+        } else if(Number(this.prev_array.join(""))===number) {
+            //動作させない
+        } else {
+            this.down(number)
+        }
+    }
 }
     let counter = new CountAnim(document.querySelector(".count-anim"))
     counter.up(99)
-    let x = 99
-
-    setInterval(() => {
-        x++
-        counter.down(x)
+    setTimeout(() => {
+        counter.change(998)
+        setTimeout(() => {
+        counter.change(298)
+    }, 500);
     }, 500);
 </script>
 
