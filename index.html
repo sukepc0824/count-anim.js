@@ -9,7 +9,7 @@
         .count-ani {
             font-family: "Inter";
             font-feature-settings: "tnum";
-            font-size: 80px;
+            font-size: 50px;
             font-weight: 500;
         }
     </style>
@@ -23,9 +23,10 @@
     <script src="./count-anim.js"></script>
     <script>
         let counter = new CountAnim(document.querySelector(".count-ani"))
-        counter.up(100)
-
-        counter.change(100)
+        counter.up("23301")
+        setInterval(() => {
+            counter.up("244440")
+        }, 1000);
     </script>
 </body>
 
